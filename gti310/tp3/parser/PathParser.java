@@ -1,5 +1,7 @@
 package gti310.tp3.parser;
 
+import gti310.tp3.GraphInfos;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 
@@ -12,9 +14,9 @@ public class PathParser implements Parser<Object> {
 		
 		String filePath = this.getClass().getClassLoader().getResource("").getPath() + filename;
 		int nbSummit = 0;
-		int infiniteValue;
-		int startingSummit;
-		int [][] fileMatrix = new int[2][2];
+		int infiniteValue = 0;
+		int startingSummit = 0;
+		int [][] graphMatrix = new int[2][2];
 
 		try {
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -26,7 +28,7 @@ public class PathParser implements Parser<Object> {
 	        	if(i == 0)
 	        	{
 	        		nbSummit = Integer.parseInt(line.toString().trim());
-	        		fileMatrix = new int[nbSummit + 1][nbSummit + 1];
+	        		graphMatrix = new int[nbSummit + 1][nbSummit + 1];
 	        		System.out.println(nbSummit);
 	        	}
 	        	else if(i == 1){
@@ -35,12 +37,12 @@ public class PathParser implements Parser<Object> {
 	        	else if(i == 2){
 	        		startingSummit = Integer.parseInt(line.toString().trim());
 	        	}
-	        	//else if(line.toString().trim() == "$"){
-	        	//	br.close(); 
-	        	//}
+	        	else if(line.toString().trim() == "$"){
+	        		br.close(); 
+	        	}
 	        	else{
 	        		String[] lineElements = line.split("\t", 3);
-	        		fileMatrix[Integer.parseInt(lineElements[0])][Integer.parseInt(lineElements[1])] = Integer.parseInt(lineElements[2]);
+	        		graphMatrix[Integer.parseInt(lineElements[0])][Integer.parseInt(lineElements[1])] = Integer.parseInt(lineElements[2]);
 	        	}
 	            i++;
 	        }
@@ -48,8 +50,8 @@ public class PathParser implements Parser<Object> {
 	    } catch(Exception e) {
 	    	
 	    }
-		showMatrix(fileMatrix);
-		return fileMatrix;
+		showMatrix(graphMatrix);
+		return new GraphInfos(nbSummit,infiniteValue,startingSummit,graphMatrix);
 	}
 	
 	private void showMatrix(int[][] matrix){
