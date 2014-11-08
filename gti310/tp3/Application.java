@@ -26,6 +26,6 @@ public class Application {
 		PathParser parser = new PathParser();
 		PathSolver solver = new PathSolver();
 		PathWriter writer = new PathWriter();
-		writer.write("Solution.txt",solver.solve(parser.parse("Grosse-Neige.txt")));
+		writer.write("Solution.txt", solver.algoTest(parser.parse("Grosse-Neige.txt")));
 	}
 }

@@ -9,10 +9,10 @@ public class GraphInfos {
 	
 	public GraphInfos(int nbSummit,int infiniteValue,int startingSummit,int[][] graphMatrix){
 		
-		nbSummit = this.nbSummit;
-		infiniteValue = this.infiniteValue;
-		startingSummit = this.startingSummit;
-		graphMatrix = this.graphMatrix;
+		this.nbSummit = nbSummit;
+		this.infiniteValue = infiniteValue;
+		this.startingSummit = startingSummit;
+		this.graphMatrix = graphMatrix;
 		
 	}
 	

@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 public class PathParser implements Parser<Object> {
 
 	@Override
-	public Object parse(String filename) {
+	public GraphInfos parse(String filename) {
 		
 		String filePath = this.getClass().getClassLoader().getResource("").getPath() + filename;
 		int nbSummit = 0;
@@ -29,13 +29,15 @@ public class PathParser implements Parser<Object> {
 	        	{
 	        		nbSummit = Integer.parseInt(line.toString().trim());
 	        		graphMatrix = new int[nbSummit + 1][nbSummit + 1];
-	        		System.out.println(nbSummit);
+	        		System.out.println("Nombre de sommets :" + nbSummit);
 	        	}
 	        	else if(i == 1){
 	        		infiniteValue = Integer.parseInt(line.toString().trim());
+	        		System.out.println("Valeur de l'infinie :" + infiniteValue);
 	        	}
 	        	else if(i == 2){
 	        		startingSummit = Integer.parseInt(line.toString().trim());
+	        		System.out.println("Sommet de départ :" + startingSummit);
 	        	}
 	        	else if(line.toString().trim() == "$"){
 	        		br.close(); 
@@ -45,17 +47,19 @@ public class PathParser implements Parser<Object> {
 	        		graphMatrix[Integer.parseInt(lineElements[0])][Integer.parseInt(lineElements[1])] = Integer.parseInt(lineElements[2]);
 	        	}
 	            i++;
+	            
 	        }
-	    
+	        
 	    } catch(Exception e) {
 	    	
 	    }
 		showMatrix(graphMatrix);
-		return new GraphInfos(nbSummit,infiniteValue,startingSummit,graphMatrix);
+		return new GraphInfos(nbSummit, infiniteValue, startingSummit, graphMatrix);
 	}
 	
 	private void showMatrix(int[][] matrix){
 		
+		System.out.println("MATRICE D'ADJACENCE : ");
 		for(int i = 1; i < matrix.length; i++){
 			System.out.print(i + "\t");
 		}
