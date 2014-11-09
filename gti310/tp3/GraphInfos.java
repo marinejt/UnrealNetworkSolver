@@ -1,5 +1,7 @@
 package gti310.tp3;
 
+
+//Classe regroupant les données issues du fichier txt
 public class GraphInfos {
 	
 	private int nbSummit;
