@@ -38,36 +38,70 @@ public class PathSolver implements Solver<Object, Object> {
 	
 	}
 	
+	public int nbArete (Arete[][] areteMatrix){
+		
+		int count = 0;
+		
+		for(int i = 1; i < areteMatrix.length; i++){
+			
+			for(int j = 1; j < areteMatrix.length; j++){
+				
+				if(areteMatrix[i][j] != null){
+					
+					count++;
+					
+				}
+				
+			}
+		}
+			
+		System.out.println("Nombre d'aretes: " + count);
+		return count;
+	}
+	
+	public int searchLastSummitWithChoices(int[] path, Arete[][] AreteMatrix){
+		
+		int i = path.length - 1;
+		
+		//while()
+		
+			
+			
+		return i;
+	}
+	
 	//Algo permettant de trouver un chemin en prenant le sommet avec l'indice le plus petit.
 	public int[] algoTest(GraphInfos input){
 		
-		areteMatrixConstructor(input);
-		
-		int[][] graph = input.getGraphMatrix();
-		int[] path = new int[input.getNbSummit()];
+		Arete[][] areteMatrix = areteMatrixConstructor(input);
+		int[] path = new int[nbArete(areteMatrix) + 1];
 		
 		path[0] = input.getStartingSummit();
 		for(int i = 1; i < path.length -1; i++){
 			
 			int j=1;
 			
-			while(graph[path[i-1]][j] == 0){
+			while((areteMatrix[path[i-1]][j] == null || areteMatrix[path[i-1]][j].getIsTraveled() 
+					|| areteMatrix[path[i-1]][j].getDestinationSummit() == input.getStartingSummit()) 
+						&& j < input.getNbSummit()){
 				
-				j++;
-			}
-			
-			if(j == input.getStartingSummit()){
-				
-				j++;
-				
-				while(graph[path[i-1]][j] == 0){
-					
 					j++;
-				}
-				
+					
+			}
+			//System.out.println("j:" + j + "\t" + "i:" + i);
+			path[i] = j;
+			
+			if(areteMatrix[path[i-1]][j] != null){
+			
+				areteMatrix[path[i-1]][j].isTraveled();
+			
 			}
 			
-			path[i] = j;
+			else{
+				
+				//TODO searchLastSummitWithChoices
+				
+			}
 		}
 		path[path.length - 1] = input.getStartingSummit();
 		
