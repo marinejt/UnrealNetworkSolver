@@ -5,12 +5,14 @@ public class Arete {
 	
 	private int sourceSummit;
 	private int destinationSummit;
+	private int distance;
 	private boolean isTraveled = false;
 	
-	public Arete(int sourceSummit, int destinationSummit){
+	public Arete(int sourceSummit, int destinationSummit, int distance){
 		
 		this.sourceSummit = sourceSummit;
 		this.destinationSummit = destinationSummit;
+		this.distance = distance;
 		
 	}
 	
@@ -23,6 +25,12 @@ public class Arete {
 	public int getDestinationSummit(){
 		
 		return destinationSummit;
+		
+	}
+	
+	public int getDistance(){
+		
+		return distance;
 		
 	}
 	

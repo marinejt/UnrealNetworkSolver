@@ -15,8 +15,33 @@ public class PathSolver implements Solver<Object, Object> {
 		return null;
 	}
 	
+	
+	public Arete[][] areteMatrixConstructor(GraphInfos input){
+		
+		int[][] graphe = input.getGraphMatrix();
+		Arete[][] areteMatrix = new Arete[input.getNbSummit()+1][input.getNbSummit()+1];
+		
+		for(int i = 1; i <= input.getNbSummit(); i++){
+			
+			for(int j = 1; j <= input.getNbSummit(); j++){
+				
+				if(graphe[i][j] != 0){
+					
+					areteMatrix[i][j] = new Arete(i, j, graphe[i][j]);
+					
+				}
+				
+			}
+		}	
+		
+		return areteMatrix;	
+	
+	}
+	
 	//Algo permettant de trouver un chemin en prenant le sommet avec l'indice le plus petit.
 	public int[] algoTest(GraphInfos input){
+		
+		areteMatrixConstructor(input);
 		
 		int[][] graph = input.getGraphMatrix();
 		int[] path = new int[input.getNbSummit()];
@@ -55,7 +80,6 @@ public class PathSolver implements Solver<Object, Object> {
 		}
 		
 		return path;
-		
 	}
 
 }
