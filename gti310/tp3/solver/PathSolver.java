@@ -59,13 +59,54 @@ public class PathSolver implements Solver<Object, Object> {
 		return count;
 	}
 	
-	public int searchLastSummitWithChoices(int[] path, Arete[][] AreteMatrix){
+	public int searchLastSummitWithChoices(int[] path, Arete[][] areteMatrix){
 		
 		int i = path.length - 1;
+		boolean indexFound = false;
+		boolean arrayIndexIsOutOfBounds = false;
 		
-		//while()
-		
+		while(!indexFound){
 			
+			int j=1;
+			
+			
+			while((areteMatrix[path[i]][j] == null || areteMatrix[path[i]][j].getIsTraveled() 
+					|| areteMatrix[path[i]][j].getDestinationSummit() == path[0] || j != path[i]) 
+						&&  !arrayIndexIsOutOfBounds){
+	
+				
+				
+				if(j == areteMatrix.length-1){
+					
+					arrayIndexIsOutOfBounds = true;
+					
+				}
+				
+				else{
+					
+					j++;
+					
+				}
+				
+						
+			}
+			//System.out.println("j:" + j + "   i:" + i);
+			if(arrayIndexIsOutOfBounds){
+				
+				i--;
+				areteMatrix[path[i]][j].isUntraveled();
+				
+			}
+			
+			else{
+			
+				indexFound = true;
+				
+			}
+			
+		}
+		
+		System.out.println("i:" + i);
 			
 		return i;
 	}
@@ -89,17 +130,20 @@ public class PathSolver implements Solver<Object, Object> {
 					
 			}
 			//System.out.println("j:" + j + "\t" + "i:" + i);
-			path[i] = j;
+			
 			
 			if(areteMatrix[path[i-1]][j] != null){
-			
+				
+				path[i] = j;
 				areteMatrix[path[i-1]][j].isTraveled();
-			
+				
 			}
 			
 			else{
 				
 				//TODO searchLastSummitWithChoices
+				//i = searchLastSummitWithChoices(path, areteMatrix);
+				//path[i] = j;
 				
 			}
 		}
@@ -109,7 +153,7 @@ public class PathSolver implements Solver<Object, Object> {
 		
 		for(int i = 0; i < path.length; i++){
 			
-			System.out.print(path[i]+ "\t");
+			System.out.print(path[i]+ "  ");
 			
 		}
 		

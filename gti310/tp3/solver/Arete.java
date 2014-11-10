@@ -44,5 +44,11 @@ public class Arete {
 		
 		isTraveled = true;
 	}
+	
+	public void isUntraveled(){
+		
+		isTraveled = false;
+		
+	}
 
 }
