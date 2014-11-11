@@ -77,7 +77,7 @@ public class PathSolver implements Solver<Object, Object> {
 			arrayIndexIsOutOfBounds = false;
 			
 			while((areteMatrix[path[i]][j] == null || areteMatrix[path[i]][j].getIsTraveled() 
-					|| areteMatrix[path[i]][j].getDestinationSummit() == path[0] || j != path[i+1]) 
+					|| areteMatrix[path[i]][j].getDestinationSummit() == path[0] || j == path[i+1]) 
 						&&  !arrayIndexIsOutOfBounds){
 	
 				
@@ -105,7 +105,13 @@ public class PathSolver implements Solver<Object, Object> {
 					
 				}
 				System.out.println((i-1) + ":" + path[i-1] + "    " + i + ":" + path[i]);
-				areteMatrix[path[i-1]][path[i]].isUntraveled();
+				try{
+					areteMatrix[path[i]][path[i-1]].isUntraveled();
+				}catch(Exception e){
+					areteMatrix[path[i-1]][path[i]].isUntraveled();
+				}
+				
+			
 				i--;
 				
 				
