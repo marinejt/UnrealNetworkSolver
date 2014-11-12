@@ -97,14 +97,14 @@ public class PathSolver implements Solver<Object, Object> {
 				
 						
 			}
-			System.out.println("j:" + j + "   i:" + i + " ");
+			//System.out.println("j:" + j + "   i:" + i + " ");
 			if(arrayIndexIsOutOfBounds){
-				for(int u = 0; u < path.length; u++){
+				//for(int u = 0; u < path.length; u++){
 					
-					System.out.print(path[u]+ "  ");
+					//System.out.print(path[u]+ "  ");
 					
-				}
-				System.out.println((i-1) + ":" + path[i-1] + "    " + i + ":" + path[i]);
+				//}
+				//System.out.println((i-1) + ":" + path[i-1] + "    " + i + ":" + path[i]);
 				try{
 					areteMatrix[path[i]][path[i-1]].isUntraveled();
 				}catch(Exception e){
@@ -125,7 +125,7 @@ public class PathSolver implements Solver<Object, Object> {
 			
 		}
 		
-		System.out.println("return i:" + i);
+		//System.out.println("return i:" + i);
 		
 			
 		return i;
@@ -139,12 +139,26 @@ public class PathSolver implements Solver<Object, Object> {
 		boolean arrayIndexIsOutOfBounds = false;
 		
 		path[0] = input.getStartingSummit();
-		for(int i = 1; i < path.length -1; i++){
+		
+		int i = 1;
+		
+		while(i < path.length - 1){
+			
+			System.out.println("i:" + i);
 			
 			int j=1;
+			arrayIndexIsOutOfBounds = false;
+			
+			/*try {
+			    Thread.sleep(1000);                 //1000 milliseconds is one second.
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}*/
+			
+			
 			
 			while((areteMatrix[path[i-1]][j] == null || areteMatrix[path[i-1]][j].getIsTraveled() 
-					|| areteMatrix[path[i-1]][j].getDestinationSummit() == input.getStartingSummit()) 
+					|| areteMatrix[path[i-1]][j].getDestinationSummit() == input.getStartingSummit() || j == path[i]) 
 						&& !arrayIndexIsOutOfBounds){
 					
 				
@@ -163,7 +177,10 @@ public class PathSolver implements Solver<Object, Object> {
 			
 					
 			}
-			//System.out.println("j:" + j + "\t" + "i:" + i);
+			
+			
+			
+			System.out.println("path[i-1]:" + path[i-1] + "\t" + "j:" + j);
 			
 			
 			if(areteMatrix[path[i-1]][j] != null && j != 0){
@@ -171,22 +188,38 @@ public class PathSolver implements Solver<Object, Object> {
 				path[i] = j;
 				areteMatrix[path[i-1]][j].isTraveled();
 				
+				System.out.println("Algo de test :");
+				for(int u = 0; u < path.length; u++){
+					
+					System.out.print(path[u]+ "  ");
+					
+				}
+				
+				i++;
 			}
 			
 			else{
 				
 				//TODO searchLastSummitWithChoices
-				i = searchLastSummitWithChoices(path, areteMatrix);
+				i = searchLastSummitWithChoices(path, areteMatrix) + 1;
 				//path[i] = j;
 				
 			}
+			
+			
+		}
+		
+		if(i == path.length - 1 && areteMatrix[path[i-1]][input.getStartingSummit()] != null){
+			
+			path[i] = input.getStartingSummit();
+			
 		}
 		
 		System.out.println("Algo de test :");
 		
-		for(int i = 0; i < path.length; i++){
+		for(int u = 0; u < path.length; u++){
 			
-			System.out.print(path[i]+ "  ");
+			System.out.print(path[u]+ "  ");
 			
 		}
 		
