@@ -5,6 +5,7 @@ import gti310.tp3.GraphInfos;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JOptionPane;
 
@@ -151,7 +152,8 @@ public class PathSolver implements Solver<Object, Object> {
 		
 		if(precedentSolutionPath != null){
 			
-			path = precedentSolutionPath;
+			//System.out.println("Je rentre 1");
+			path = Arrays.copyOf(precedentSolutionPath, precedentSolutionPath.length);
 			
 		}
 		
@@ -172,7 +174,9 @@ public class PathSolver implements Solver<Object, Object> {
 			
 			arrayIndexIsOutOfBounds = false;
 			
-			if(path.equals(precedentSolutionPath) && i == path.length - 1){
+			if(precedentSolutionPath != null && Arrays.equals(path, precedentSolutionPath)){
+				
+				//System.out.println("Je rentre 2");
 				
 				i = searchLastSummitWithChoices(path, areteMatrix) + 1;
 				
@@ -188,7 +192,7 @@ public class PathSolver implements Solver<Object, Object> {
 			
 			
 			
-			System.out.println("i:" + i);
+			//System.out.println("i:" + i);
 			
 			
 			
@@ -224,7 +228,7 @@ public class PathSolver implements Solver<Object, Object> {
 			
 			
 			
-			System.out.println("path[i-1]:" + path[i-1] + "\t" + "j:" + j);
+			//System.out.println("path[i-1]:" + path[i-1] + "\t" + "j:" + j);
 			
 			
 			if(areteMatrix[path[i-1]][j] != null && j != 0){
@@ -232,14 +236,15 @@ public class PathSolver implements Solver<Object, Object> {
 				path[i] = j;
 				areteMatrix[path[i-1]][j].isTraveled();
 				
-				System.out.println("Algo de test :");
-				for(int u = 0; u < path.length; u++){
+				//System.out.println("Algo de test :");
+				//for(int u = 0; u < path.length; u++){
 					
-					System.out.print(path[u]+ "  ");
+					//System.out.print(path[u]+ "  ");
 					
-				}
+				//}
 				
 				i++;
+				searchedLastSummitWithChoices = false;
 			}
 			
 			else{
@@ -252,8 +257,11 @@ public class PathSolver implements Solver<Object, Object> {
 					
 				}
 				
-				j = path[i+1] + 1;
+				j = path[i] + 1;
+				//System.out.println("nouveau JJJJJJJJJJ:"+j + "       WHYYY: i:" + i + "           WTF: path[i]:" + path[i]);
 				searchedLastSummitWithChoices = true;
+				
+				
 			}
 			
 			

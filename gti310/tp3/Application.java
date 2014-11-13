@@ -31,7 +31,7 @@ public class Application {
 		PathParser parser = new PathParser();
 		PathSolver solver = new PathSolver();
 		PathWriter writer = new PathWriter();
-		writer.write("Solution.txt", solver.solveTest(parser.parse(openFile())));
+		writer.write("Solution.txt", solver.solveTest(parser.parse("Grosse-Neige.txt")));
 	}
 	
 	private static String openFile(){
