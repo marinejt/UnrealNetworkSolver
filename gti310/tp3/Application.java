@@ -1,4 +1,9 @@
 package gti310.tp3;
+import java.io.File;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import gti310.tp3.parser.*;
 import gti310.tp3.solver.PathSolver;
 import gti310.tp3.writer.PathWriter;
@@ -26,6 +31,13 @@ public class Application {
 		PathParser parser = new PathParser();
 		PathSolver solver = new PathSolver();
 		PathWriter writer = new PathWriter();
-		writer.write("Solution.txt", solver.solveTest(parser.parse("Grosse-Neige.txt")));
+		writer.write("Solution.txt", solver.solveTest(parser.parse(openFile())));
+	}
+	
+	private static String openFile(){
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		File file = chooser.getSelectedFile();
+		return file.getName();
 	}
 }
