@@ -139,9 +139,9 @@ public class PathSolver implements Solver<Object, Object> {
 	}
 	
 	//Algo permettant de trouver un chemin en prenant le sommet avec l'indice le plus petit.
-	public int[] algoTest(GraphInfos input, int[] precedentSolutionPath){
+	public int[] algoTest(GraphInfos input ,Arete[][] areteMatrix, int[] precedentSolutionPath){
 		
-		Arete[][] areteMatrix = areteMatrixConstructor(input);
+		
 		int[] path = new int[nbArete(areteMatrix) + 1];
 		boolean arrayIndexIsOutOfBounds = false;
 		
@@ -152,16 +152,45 @@ public class PathSolver implements Solver<Object, Object> {
 		if(precedentSolutionPath != null){
 			
 			path = precedentSolutionPath;
-			i = searchLastSummitWithChoices(path, areteMatrix) + 1;
 			
 		}
 		
+		
+		boolean searchedLastSummitWithChoices = false;
+		
+		int j = 1;
+		
 		while(i < path.length - 1){
+			
+			
+			
+			if(!searchedLastSummitWithChoices){
+				
+				j = 1;
+			}
+			
+			
+			arrayIndexIsOutOfBounds = false;
+			
+			if(path.equals(precedentSolutionPath) && i == path.length - 1){
+				
+				i = searchLastSummitWithChoices(path, areteMatrix) + 1;
+				
+				for(int u = i + 1; u < path.length; u++){
+					
+					path[u] = 0;
+					
+				}
+				
+				j = path[i+1] + 1;
+				
+			}
+			
+			
 			
 			System.out.println("i:" + i);
 			
-			int j=1;
-			arrayIndexIsOutOfBounds = false;
+			
 			
 			/*try {
 			    Thread.sleep(1000);                 //1000 milliseconds is one second.
@@ -217,6 +246,14 @@ public class PathSolver implements Solver<Object, Object> {
 				
 				i = searchLastSummitWithChoices(path, areteMatrix) + 1;
 				
+				for(int u = i + 1; u < path.length; u++){
+					
+					path[u] = 0;
+					
+				}
+				
+				j = path[i+1] + 1;
+				searchedLastSummitWithChoices = true;
 			}
 			
 			
@@ -244,15 +281,24 @@ public class PathSolver implements Solver<Object, Object> {
 		
 		int[] path;
 		ArrayList<int[]> pathList = new ArrayList<int[]>();
+		Arete[][] areteMatrix = areteMatrixConstructor(input);
 		
 		try {
 		    Thread.sleep(1000);                 //1000 milliseconds is one second.
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
-		path = algoTest(input, null);
+		path = algoTest(input, areteMatrix, null);
+		
+		int i = 1;
 		
 		while(path != null){
+			
+			i++;
+			System.out.println();
+			System.out.println();
+			System.out.println("Solution " + i);
+			System.out.println();
 			
 			try {
 			    Thread.sleep(1000);                 //1000 milliseconds is one second.
@@ -261,7 +307,7 @@ public class PathSolver implements Solver<Object, Object> {
 			}
 			
 			pathList.add(path);
-			path = algoTest(input,path);
+			path = algoTest(input, areteMatrix,path);
 			
 		}
 		
