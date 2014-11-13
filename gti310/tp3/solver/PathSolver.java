@@ -11,14 +11,42 @@ import javax.swing.JOptionPane;
 
 
 public class PathSolver implements Solver<Object, Object> {
-
+	
+	//Méthode principale servant à générer toutes les solutions possibles grâce au SolutionGenerator.
+	//Retourne une liste contenant l'ensemble des solutions.
 	@Override
 	public Object solve(Object input) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		GraphInfos grapheInfos = (GraphInfos) input; 
+		int[] path;
+		ArrayList<int[]> pathList = new ArrayList<int[]>();
+		Arete[][] areteMatrix = areteMatrixConstructor(grapheInfos);
+		
+		path = solutionGenerator(grapheInfos, areteMatrix, null);
+		
+		int i = 1;
+		
+		//Les solutions sont générées et stockées tour à tour.
+		while(path != null){
+			
+			i++;
+			System.out.println();
+			System.out.println();
+			System.out.println("Solution " + i);
+			System.out.println();
+			
+			pathList.add(path);
+			path = solutionGenerator(grapheInfos, areteMatrix, path);
+			
+		}
+		
+		System.out.println("pas de solutions supplementaires!");
+		System.out.println("Nombre de solutions: " + pathList.size());
+		return pathList;
 	}
 	
 	
+	//Méthode qui construit la matrice des arrêtes à partir de la matrice d'adjacence construite dans GraphInfos
 	public Arete[][] areteMatrixConstructor(GraphInfos input){
 		
 		int[][] graphe = input.getGraphMatrix();
@@ -41,6 +69,7 @@ public class PathSolver implements Solver<Object, Object> {
 	
 	}
 	
+	//Méthode qui retourne le nombre d'arrête dans une matrice d'arrêtes
 	public int nbArete (Arete[][] areteMatrix){
 		
 		int count = 0;
@@ -58,24 +87,25 @@ public class PathSolver implements Solver<Object, Object> {
 			}
 		}
 			
-		//System.out.println("Nombre d'aretes: " + count);
 		return count;
 	}
 	
+	//Méthode qui cherche parmis les sommets déjà visités, celui sur lequel il peut faire un choix différent.
 	public int searchLastSummitWithChoices(int[] path, Arete[][] areteMatrix){
 		
 		int i = path.length - 2;
 		boolean indexFound = false;
 		boolean arrayIndexIsOutOfBounds = false;
 		
+		//On saute les zéros
 		while(path[i] == 0){
 			
 			i--;
 			
 		}
 		
+		//On trouve le bon indice relié au sommet recherché
 		while(!indexFound){
-			
 			
 			int j = path[i+1] + 1;
 			
@@ -88,15 +118,13 @@ public class PathSolver implements Solver<Object, Object> {
 				
 			}
 			
+			//Pour l'élément i du tableau, on regarde s'il y d'autres options pas encore explorées 
 			while((areteMatrix[path[i]][j] == null || areteMatrix[path[i]][j].getIsTraveled() 
 					|| areteMatrix[path[i]][j].getDestinationSummit() == path[0]) &&  !arrayIndexIsOutOfBounds){
 	
-				
-				
 				if(j < areteMatrix.length){
 					
 					j++;
-					
 					
 				}
 				
@@ -106,79 +134,89 @@ public class PathSolver implements Solver<Object, Object> {
 					j=0;
 					
 				}
-				
-						
+							
 			}
-			//System.out.println("j:" + j + "   i:" + i + " ");
+			
+			//Si ce n'est pas le bon indice
 			if(arrayIndexIsOutOfBounds){
-				//for(int u = 0; u < path.length; u++){
+			
+				if(i == 0){
 					
-					//System.out.print(path[u]+ "  ");
+					i--;
 					
-				//}
+				}
+				//Cas spécial relié au fait qu'aucun indice n'a été trouvé
+				if(i == -1){
+					
+					indexFound = true;
+					
+				}
 				
-				//System.out.println((i-1) + ":" + path[i-1] + "    " + i + ":" + path[i]);
+				//Tant que ce n'est pas le bon indice on défait le chemin entrepris.
+				else{
+					
+					areteMatrix[path[i-1]][path[i]].isUntraveled();
+					i--;
 				
-				areteMatrix[path[i-1]][path[i]].isUntraveled();
-				
-				i--;
+				}
 				
 			}
 			
+			//L'indice a été trouvé
 			else{
-			
+						
 				indexFound = true;
 				
 			}
 			
 		}
 		
-		//System.out.println("return i:" + i);
-		
-			
 		return i;
 	}
 	
-	//Algo permettant de trouver un chemin en prenant le sommet avec l'indice le plus petit.
-	public int[] algoTest(GraphInfos input ,Arete[][] areteMatrix, int[] precedentSolutionPath){
+	//Méthode permettant de trouver un chemin en prenant le sommet avec l'indice le plus petit et en considérant la dernière solution trouvée.
+	public int[] solutionGenerator(GraphInfos input ,Arete[][] areteMatrix, int[] precedentSolutionPath){
 		
 		
 		int[] path = new int[nbArete(areteMatrix) + 1];
-		boolean arrayIndexIsOutOfBounds = false;
-		
-		path[0] = input.getStartingSummit();
-		
+		boolean matrixIndexIsOutOfBounds = false;
+		boolean pathIndexIsOutOfBounds = false;
+		boolean searchedLastSummitWithChoices = false;
+		int j = 1;
 		int i = 1;
-		
+				
+		//Si une solution précédante existe
 		if(precedentSolutionPath != null){
 			
-			//System.out.println("Je rentre 1");
 			path = Arrays.copyOf(precedentSolutionPath, precedentSolutionPath.length);
 			
 		}
 		
+		//Premier élément du tableau de solution est le point de départ.
+		path[0] = input.getStartingSummit();
 		
-		boolean searchedLastSummitWithChoices = false;
-		
-		int j = 1;
-		
-		while(i < path.length - 1){
-			
-			
+		//On remplit le tableau d'une solution
+		while(i < path.length - 1 && !pathIndexIsOutOfBounds){
 			
 			if(!searchedLastSummitWithChoices){
 				
 				j = 1;
+				
 			}
 			
+			matrixIndexIsOutOfBounds = false;
 			
-			arrayIndexIsOutOfBounds = false;
-			
+			//Si une solution précédente existe
 			if(precedentSolutionPath != null && Arrays.equals(path, precedentSolutionPath)){
 				
-				//System.out.println("Je rentre 2");
-				
+				//On trouve le dernier sommet où l'on peut faire un choix différent
 				i = searchLastSummitWithChoices(path, areteMatrix) + 1;
+				
+				if(i == 0){
+					
+					pathIndexIsOutOfBounds = true;
+					
+				}
 				
 				for(int u = i + 1; u < path.length; u++){
 					
@@ -190,35 +228,20 @@ public class PathSolver implements Solver<Object, Object> {
 				
 			}
 			
-			
-			
-			//System.out.println("i:" + i);
-			
-			
-			
-			/*try {
-			    Thread.sleep(1000);                 //1000 milliseconds is one second.
-			} catch(InterruptedException ex) {
-			    Thread.currentThread().interrupt();
-			}*/
-			
-			
-			
+			//On cherche l'arrête avec le sommet destination le plus petit et pas encore traversé
 			while((areteMatrix[path[i-1]][j] == null || areteMatrix[path[i-1]][j].getIsTraveled() 
 					|| areteMatrix[path[i-1]][j].getDestinationSummit() == input.getStartingSummit() || j == path[i]) 
-						&& !arrayIndexIsOutOfBounds){
+						&& !matrixIndexIsOutOfBounds){
 					
-				
 				if(j < areteMatrix.length){
 					
 					j++;
-					
 					
 				}
 				
 				if(j == areteMatrix.length){
 					
-					arrayIndexIsOutOfBounds = true;
+					matrixIndexIsOutOfBounds = true;
 					j=0;
 					
 				}
@@ -226,31 +249,29 @@ public class PathSolver implements Solver<Object, Object> {
 					
 			}
 			
-			
-			
-			//System.out.println("path[i-1]:" + path[i-1] + "\t" + "j:" + j);
-			
-			
+			//Si une arrête avec un sommet destination est trouvé
 			if(areteMatrix[path[i-1]][j] != null && j != 0){
 				
 				path[i] = j;
 				areteMatrix[path[i-1]][j].isTraveled();
-				
-				//System.out.println("Algo de test :");
-				//for(int u = 0; u < path.length; u++){
-					
-					//System.out.print(path[u]+ "  ");
-					
-				//}
-				
 				i++;
 				searchedLastSummitWithChoices = false;
+				
 			}
 			
+			//Sinon, on cherche le dernier sommet où l'on peut faire un choix différent
 			else{
 				
 				i = searchLastSummitWithChoices(path, areteMatrix) + 1;
 				
+				//Si on trouve pas de sommet avec des choix différents
+				if(i == 0){
+					
+					pathIndexIsOutOfBounds = true;
+					
+				}
+				
+				//On remplace les anciennes valeurs du tableau par des 0 pour plus de clarté
 				for(int u = i + 1; u < path.length; u++){
 					
 					path[u] = 0;
@@ -258,26 +279,38 @@ public class PathSolver implements Solver<Object, Object> {
 				}
 				
 				j = path[i] + 1;
-				//System.out.println("nouveau JJJJJJJJJJ:"+j + "       WHYYY: i:" + i + "           WTF: path[i]:" + path[i]);
+		
 				searchedLastSummitWithChoices = true;
-				
 				
 			}
 			
-			
 		}
 		
+		//Si la solution générale est trouvé et que le dernier élément est en mesure d'avoir le sommet de départ comme sommet de destination,
 		if(i == path.length - 1 && areteMatrix[path[i-1]][input.getStartingSummit()] != null){
 			
+			//on met le sommet de destination à la fin du tableau.
 			path[i] = input.getStartingSummit();
 			
 		}
 		
-		System.out.println("Algo de test :");
-		
-		for(int u = 0; u < path.length; u++){
+		//Affichage de la solution trouvée
+		if(path != null){
 			
-			System.out.print(path[u]+ "  ");
+			System.out.println("Algo de test :");
+			
+			for(int u = 0; u < path.length; u++){
+				
+				System.out.print(path[u]+ "  ");
+				
+			}
+			
+		}
+		
+		//Si aucune solution n'est trouvée
+		if(pathIndexIsOutOfBounds){
+			
+			path = null;
 			
 		}
 		
@@ -285,44 +318,4 @@ public class PathSolver implements Solver<Object, Object> {
 		
 	}
 	
-	public ArrayList<int[]> solveTest(GraphInfos input) {
-		
-		int[] path;
-		ArrayList<int[]> pathList = new ArrayList<int[]>();
-		Arete[][] areteMatrix = areteMatrixConstructor(input);
-		
-		try {
-		    Thread.sleep(1000);                 //1000 milliseconds is one second.
-		} catch(InterruptedException ex) {
-		    Thread.currentThread().interrupt();
-		}
-		path = algoTest(input, areteMatrix, null);
-		
-		int i = 1;
-		
-		while(path != null){
-			
-			i++;
-			System.out.println();
-			System.out.println();
-			System.out.println("Solution " + i);
-			System.out.println();
-			
-			try {
-			    Thread.sleep(1000);                 //1000 milliseconds is one second.
-			} catch(InterruptedException ex) {
-			    Thread.currentThread().interrupt();
-			}
-			
-			pathList.add(path);
-			path = algoTest(input, areteMatrix,path);
-			
-		}
-		
-		return pathList;
-	}
-	
-	
-	
-
 }
