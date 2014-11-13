@@ -4,6 +4,8 @@ import gti310.tp3.GraphInfos;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 
@@ -55,13 +57,13 @@ public class PathSolver implements Solver<Object, Object> {
 			}
 		}
 			
-		System.out.println("Nombre d'aretes: " + count);
+		//System.out.println("Nombre d'aretes: " + count);
 		return count;
 	}
 	
 	public int searchLastSummitWithChoices(int[] path, Arete[][] areteMatrix){
 		
-		int i = path.length - 1;
+		int i = path.length - 2;
 		boolean indexFound = false;
 		boolean arrayIndexIsOutOfBounds = false;
 		
@@ -73,25 +75,34 @@ public class PathSolver implements Solver<Object, Object> {
 		
 		while(!indexFound){
 			
-			int j=1;
+			
+			int j = path[i+1] + 1;
+			
 			arrayIndexIsOutOfBounds = false;
 			
+			if(j == areteMatrix.length){
+				
+				arrayIndexIsOutOfBounds = true;
+				j=0;
+				
+			}
+			
 			while((areteMatrix[path[i]][j] == null || areteMatrix[path[i]][j].getIsTraveled() 
-					|| areteMatrix[path[i]][j].getDestinationSummit() == path[0] || j == path[i+1]) 
-						&&  !arrayIndexIsOutOfBounds){
+					|| areteMatrix[path[i]][j].getDestinationSummit() == path[0]) &&  !arrayIndexIsOutOfBounds){
 	
 				
 				
-				if(j == areteMatrix.length - 1){
+				if(j < areteMatrix.length){
 					
-					j= 0;
-					arrayIndexIsOutOfBounds = true;
+					j++;
+					
 					
 				}
 				
-				else{
+				if(j == areteMatrix.length){
 					
-					j++;
+					arrayIndexIsOutOfBounds = true;
+					j=0;
 					
 				}
 				
@@ -104,16 +115,12 @@ public class PathSolver implements Solver<Object, Object> {
 					//System.out.print(path[u]+ "  ");
 					
 				//}
+				
 				//System.out.println((i-1) + ":" + path[i-1] + "    " + i + ":" + path[i]);
-				try{
-					areteMatrix[path[i]][path[i-1]].isUntraveled();
-				}catch(Exception e){
-					areteMatrix[path[i-1]][path[i]].isUntraveled();
-				}
 				
-			
+				areteMatrix[path[i-1]][path[i]].isUntraveled();
+				
 				i--;
-				
 				
 			}
 			
@@ -132,7 +139,7 @@ public class PathSolver implements Solver<Object, Object> {
 	}
 	
 	//Algo permettant de trouver un chemin en prenant le sommet avec l'indice le plus petit.
-	public int[] algoTest(GraphInfos input){
+	public int[] algoTest(GraphInfos input, int[] precedentSolutionPath){
 		
 		Arete[][] areteMatrix = areteMatrixConstructor(input);
 		int[] path = new int[nbArete(areteMatrix) + 1];
@@ -141,6 +148,13 @@ public class PathSolver implements Solver<Object, Object> {
 		path[0] = input.getStartingSummit();
 		
 		int i = 1;
+		
+		if(precedentSolutionPath != null){
+			
+			path = precedentSolutionPath;
+			i = searchLastSummitWithChoices(path, areteMatrix) + 1;
+			
+		}
 		
 		while(i < path.length - 1){
 			
@@ -162,16 +176,17 @@ public class PathSolver implements Solver<Object, Object> {
 						&& !arrayIndexIsOutOfBounds){
 					
 				
-				if(j == areteMatrix.length - 1){
+				if(j < areteMatrix.length){
 					
-					j= 0;
-					arrayIndexIsOutOfBounds = true;
+					j++;
+					
 					
 				}
 				
-				else{
+				if(j == areteMatrix.length){
 					
-					j++;
+					arrayIndexIsOutOfBounds = true;
+					j=0;
 					
 				}
 			
@@ -200,9 +215,7 @@ public class PathSolver implements Solver<Object, Object> {
 			
 			else{
 				
-				//TODO searchLastSummitWithChoices
 				i = searchLastSummitWithChoices(path, areteMatrix) + 1;
-				//path[i] = j;
 				
 			}
 			
@@ -224,6 +237,38 @@ public class PathSolver implements Solver<Object, Object> {
 		}
 		
 		return path;
+		
 	}
+	
+	public ArrayList<int[]> solveTest(GraphInfos input) {
+		
+		int[] path;
+		ArrayList<int[]> pathList = new ArrayList<int[]>();
+		
+		try {
+		    Thread.sleep(1000);                 //1000 milliseconds is one second.
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
+		path = algoTest(input, null);
+		
+		while(path != null){
+			
+			try {
+			    Thread.sleep(1000);                 //1000 milliseconds is one second.
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+			
+			pathList.add(path);
+			path = algoTest(input,path);
+			
+		}
+		
+		return pathList;
+	}
+	
+	
+	
 
 }
