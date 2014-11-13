@@ -27,17 +27,9 @@ public class Application {
 	 */
 	public static void main(String args[]) {
 		System.out.println("Unreal Networks Solver !");
-		
 		PathParser parser = new PathParser();
 		PathSolver solver = new PathSolver();
 		PathWriter writer = new PathWriter();
-		writer.write("Solution.txt", solver.solve(parser.parse("Grosse-Neige.txt")));
-	}
-	
-	private static String openFile(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		File file = chooser.getSelectedFile();
-		return file.getName();
+		writer.write("Solution.txt", solver.solve(parser.parse(args[0])));
 	}
 }

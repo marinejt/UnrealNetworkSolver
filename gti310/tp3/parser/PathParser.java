@@ -12,14 +12,13 @@ public class PathParser implements Parser<Object> {
 	@Override
 	public GraphInfos parse(String filename) {
 		if (acceptFile(filename)){
-			String filePath = this.getClass().getClassLoader().getResource("").getPath() + filename;
 			int nbSummit = 0;
 			int infiniteValue = 0;
 			int startingSummit = 0;
 			int [][] graphMatrix = new int[2][2];
 	
 			try {
-			BufferedReader br = new BufferedReader(new FileReader(filePath));
+			BufferedReader br = new BufferedReader(new FileReader(filename));
 		        String line;
 	
 		        int i = 0;
@@ -58,8 +57,10 @@ public class PathParser implements Parser<Object> {
 				
 		}else{
 			JOptionPane.showMessageDialog(null, "Désolé, le format n'est pas supporté.");
+			System.exit(0);
 			return null;
 		}
+
 	}
 	
 	private void showMatrix(int[][] matrix){
@@ -79,7 +80,11 @@ public class PathParser implements Parser<Object> {
 	}
 	
 	private boolean acceptFile(String fileName){
-		//TODO check if .txt + format
-		return true;
+		String[] elements = fileName.split("\\.(?=[^\\.]+$)");
+		if(elements[1].equalsIgnoreCase("txt")){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
