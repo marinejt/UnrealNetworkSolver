@@ -27,9 +27,10 @@ public class Application {
 	 */
 	public static void main(String args[]) {
 		System.out.println("Unreal Networks Solver !");
+		System.out.println(args[0]);
 		PathParser parser = new PathParser();
 		PathSolver solver = new PathSolver();
 		PathWriter writer = new PathWriter();
-		writer.write("Solution.txt", solver.solve(parser.parse(args[0])));
+		writer.write(args[1], solver.solve(parser.parse(args[0])));
 	}
 }

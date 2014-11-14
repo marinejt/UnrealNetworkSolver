@@ -12,7 +12,7 @@ public class PathWriter implements Writer {
 	         ObjectOutputStream oos = new ObjectOutputStream(fos);
 
 	         // write something in the file
-	         oos.writeObject(output);
+	         oos.writeObject(output.toString());
 
 	         // close the stream
 	         oos.close();
